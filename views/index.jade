@@ -1,0 +1,25 @@
+h1
+    a(href='/') WEPPON
+
+!= messages()
+p
+    a(href=base + '/post/add') New Post
+
+- if (count)
+  - if (count != 1)
+    p #{count} posts
+  - else
+    p #{count} post
+  #posts!= partial('post', posts)
+- else
+  p 
+    | It looks like you have no posts!
+  p
+    | Click
+    a(href=base + '/post/add') here 
+    | to create a post. Login
+    | as
+    em "admin" 
+    | and
+    em "express"
+    | .

@@ -1,0 +1,45 @@
+//script(type='text/javascript', src=base + "/js/ace/ace.js")
+script(type='text/javascript', src=base + "/js/logic.js")
+script(type='text/javascript')
+    require(["/js/markdown/markdown.js", "/js/ace/ace.js"]);
+    window.onload = function() {
+        editor = ace.edit("editor");
+        editor.setHighlightActiveLine(false);
+        editor.setShowPrintMargin(false);
+        editor.getSession().setUseWrapMode(true);
+
+        var marked_down = document.getElementById("marked_down");
+        editor.getSession().on('change', function(e) {
+            var md_out = markdown.toHTML(editor.getSession().getValue());
+            marked_down.innerHTML = md_out;
+        });
+    };
+
+- if (post.title)
+  h1 Editing #{post.title}
+- else
+  h1 New Article
+
+a(href="/") &laquo; front
+!= messages()
+
+form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='post')
+  - if (post.title)
+    input(type='hidden', name='_method', value='put')
+  p
+    label(for='post[title]') Title
+    input(id='post_title', type='text', name='post[title]', 
+            value=post.title, onkeyup='fillNormaliseURL(this)')
+  p(id='normalized_url')
+    span(class='bold') URL: 
+    span(id='url_lighter')
+  p Body
+    div(id="ace_container")
+        div(id="editor")
+        div(id="marked_down_cont")
+            div(id="marked_down")
+  p
+    input(name='uploads[]', type='file')
+  p
+    button Save Draft
+    input(type='submit', value=post.title ? 'Update' : 'Create')
