@@ -1,5 +1,6 @@
 //script(type='text/javascript', src=base + "/js/ace/ace.js")
 script(type='text/javascript', src=base + "/js/logic.js")
+script(type='text/javascript', src=base + "/js/jquery-1.5.2.min.js")
 script(type='text/javascript')
     require(["/js/markdown/markdown.js", "/js/ace/ace.js"]);
     window.onload = function() {
@@ -14,6 +15,33 @@ script(type='text/javascript')
             marked_down.innerHTML = md_out;
         });
     };
+    
+    var original_y = 0, onthemove = false;
+    var elAce, elMarkdown;
+    $(document).ready(function() {
+        
+        elAce = $("#editor");
+        elMarkdown = $("#marked_down_cont");
+        
+        $("#input_slider").hover(function() {
+            $(this).addClass("hover");
+        }, function() {
+            $(this).removeClass("hover");
+        }).mousedown(function(e) {
+            onthemove = true;
+            original_y = e.pageY;
+            original_height = elAce.height();
+        });
+    }).mousemove(function(e) {
+        if (onthemove) {
+            height_diff = e.pageY - original_y;
+            elAce.height(original_height + height_diff);
+            elMarkdown.height(original_height + height_diff);
+            editor.resize();
+        }
+    }).mouseup(function() {
+        onthemove = false;
+    });
 
 - if (post.title)
   h1 Editing #{post.title}
@@ -38,8 +66,9 @@ form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='pos
         div(id="editor")
         div(id="marked_down_cont")
             div(id="marked_down")
+  div(id="input_slider")
+  //p
+  //  input(name='uploads[]', type='file')
   p
-    input(name='uploads[]', type='file')
-  p
-    button Save Draft
+    //button Save Draft
     input(type='submit', value=post.title ? 'Update' : 'Create')

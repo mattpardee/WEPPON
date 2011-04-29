@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var basicAuth = require('../../../lib/express').basicAuth
+var basicAuth = require('express').basicAuth
   , Post = require('../models/post');
 
 module.exports = function(app){
