@@ -122,3 +122,6 @@ input#post_title {
 #input_slider.hover {
     background: #fff;
 }
+.hidden {
+    display: none;
+}

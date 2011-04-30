@@ -15,4 +15,5 @@
     p.date.updated Updated at #{post.updatedAt}
   
   // body
-  p.body= post.body
+  p.body
+    !{post.rendered_body}

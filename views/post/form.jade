@@ -1,4 +1,3 @@
-//script(type='text/javascript', src=base + "/js/ace/ace.js")
 script(type='text/javascript', src=base + "/js/logic.js")
 script(type='text/javascript', src=base + "/js/jquery-1.5.2.min.js")
 script(type='text/javascript')
@@ -10,19 +9,26 @@ script(type='text/javascript')
         editor.getSession().setUseWrapMode(true);
 
         var marked_down = document.getElementById("marked_down");
+        var ta_body = document.getElementById("ta_body");
         editor.getSession().on('change', function(e) {
-            var md_out = markdown.toHTML(editor.getSession().getValue());
+            var ace_text = editor.getSession().getValue();
+            var md_out = markdown.toHTML(ace_text);
+            ta_body.innerHTML = ace_text;
             marked_down.innerHTML = md_out;
         });
     };
-    
+
+    function procForm() {
+        return true;
+    }
+
     var original_y = 0, onthemove = false;
     var elAce, elMarkdown;
     $(document).ready(function() {
-        
+
         elAce = $("#editor");
         elMarkdown = $("#marked_down_cont");
-        
+
         $("#input_slider").hover(function() {
             $(this).addClass("hover");
         }, function() {
@@ -51,7 +57,7 @@ script(type='text/javascript')
 a(href="/") &laquo; front
 != messages()
 
-form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='post')
+form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='post', onsubmit='return procForm()')
   - if (post.title)
     input(type='hidden', name='_method', value='put')
   p
@@ -61,6 +67,7 @@ form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='pos
   p(id='normalized_url')
     span(class='bold') URL: 
     span(id='url_lighter')
+  textarea(id='ta_body', class='hidden', name='post[body]')= post.body || ''
   p Body
     div(id="ace_container")
         div(id="editor")
