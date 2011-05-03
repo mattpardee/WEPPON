@@ -1,7 +1,7 @@
-script(type='text/javascript', src=base + "/js/logic.js")
+//script(type='text/javascript', src=base + "/js/logic.js")
 script(type='text/javascript', src=base + "/js/jquery-1.5.2.min.js")
 script(type='text/javascript')
-    require(["/js/markdown/markdown.js", "/js/ace/ace.js"]);
+    require(["/js/markdown/markdown.js", "/js/ace/ace.js", "/js/weppontools.js"]);
     window.onload = function() {
         editor = ace.edit("editor");
         editor.setHighlightActiveLine(false);
@@ -63,7 +63,7 @@ form#post(action=base + '/post' + (post.title ? '/' + post.id : ''), method='pos
   p
     label(for='post[title]') Title
     input(id='post_title', type='text', name='post[title]', 
-            value=post.title, onkeyup='fillNormaliseURL(this)')
+            value=post.title, onkeyup='weppontools.fillNormaliseURL(this)')
   p(id='normalized_url')
     span(class='bold') URL: 
     span(id='url_lighter')

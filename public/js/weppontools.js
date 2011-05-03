@@ -1,16 +1,17 @@
+(function( expose ) {
+    
 var lastTitleInput = '';
 var noramlizedURL = '';
 
-function fillNormaliseURL(e) {
+expose.fillNormaliseURL = function(e) {
     if (e.value != lastTitleInput) {
         lastTitleInput = e.value.toLowerCase();
-        normalizedURL = lastTitleInput.NormaliseUrl();
+        normalizedURL = this.normalizeURL(lastTitleInput);
         document.getElementById('url_lighter').innerHTML = normalizedURL;
     }
-}
+};
 
-String.prototype.NormaliseUrl = function () {
-    var url = this;
+expose.normalizeURL = function(url) {
     var preserveNormalForm = /[,_`;\':-]+/gi
     url = url.replace(preserveNormalForm, ' ');
 
@@ -18,15 +19,15 @@ String.prototype.NormaliseUrl = function () {
     url = stripVowelAccent(url);
 
     //remove all special chars
-    url = url.replace(/[^a-z|^0-9|^-|\s]/gi, '').trim();
+    url = trim(url.replace(/[^a-z|^0-9|^-|\s]/gi, ''));
 
     //replace spaces with a -
     url = url.replace(/\s+/gi, '-');
     return url;
 }
 
-String.prototype.trim = function () {
-    return this.replace(/^\s+|\s+$/g, "");
+function trim(str) {
+    return str.replace(/^\s+|\s+$/g, "");
 }
 
 function stripVowelAccent(str) {
@@ -48,3 +49,13 @@ function stripVowelAccent(str) {
 
     return str;
 }
+
+})( (function() {
+  if ( typeof exports === "undefined" ) {
+    window.weppontools = {};
+    return window.weppontools;
+  }
+  else {
+    return exports;
+  }
+} )() );

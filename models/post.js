@@ -1,7 +1,9 @@
-var markdown = require(__dirname + '/../public/js/markdown/markdown.js')
+var fs = require("fs")
+  , markdown = require(__dirname + '/../public/js/markdown/markdown.js')
+  , weppontools = require(__dirname + '/../public/js/weppontools.js');
 
 // Fake data store
-
+//@TODO REMOVE THIS
 var ids = 0
   , db = {};
 
@@ -14,16 +16,32 @@ var Post = exports = module.exports = function Post(title, body) {
 
 Post.prototype.save = function(fn){
   db[this.id] = this;
-  fn();
+  var new_dir = __dirname + "/../articles/" + this.rendered_title;
+  var _self = this;
+  fs.mkdir(new_dir, 0774, function(err) {
+    if (err) {
+        return fn(new Error('Error creating directory: ' + err));
+    }
+    
+    else {
+      fs.writeFile(new_dir + '/article.md', _self.body, function(err) {
+        if(err) {
+            return fn(new Error('Error writing file: ' + err));
+        } else {
+            fn();
+        }
+      });
+    }
+  });
 };
 
 Post.prototype.validate = function(fn){
   if (!this.title) return fn(new Error('_title_ required'));
   if (!this.body) return fn(new Error('_body_ required'));
   this.rendered_body = markdown.toHTML(this.body);
+  this.rendered_title = weppontools.normalizeURL(this.title.toLowerCase());
   fn();
 };
-
 
 Post.prototype.update = function(data, fn){
   this.updatedAt = new Date;

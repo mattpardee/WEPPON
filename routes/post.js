@@ -52,6 +52,11 @@ module.exports = function(app){
       }
 
       post.save(function(err){
+        if (err) {
+          req.flash('error', err.message);
+          return res.redirect('back');
+        }
+
         req.flash('info', 'Successfully created post _%s_', post.title);
         res.redirect('/post/' + post.id);
       });  
